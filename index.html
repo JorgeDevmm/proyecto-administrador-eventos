@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Administrador de Pacientes</title>
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1 class="text-center pt-3 titulo">Administrador de Eventos</h1>
+    </header>
+
+    <div class="container mt-5 p-5">
+      <div id="contenido" class="row">
+        <div class="col-md-6 agregar-evento">
+          <form id="nueva-evento">
+            <h2 class="mb-4 text-center text-secondary f-w-bold">
+              Datos del Evento
+            </h2>
+            <div class="form-group row">
+              <label
+                class="pl-0 col-sm-8 col-lg-8 col-form-label text-secondary f-w-bold"
+                >Nombre del Evento:</label
+              >
+              <input
+                type="text"
+                id="mascota"
+                name="mascota"
+                class="form-control"
+                placeholder="Nombre Mascota"
+              />
+            </div>
+            <div class="form-group row">
+              <label
+                class="pl-0 col-sm-4 col-lg-4 col-form-label text-secondary f-w-bold"
+                >Contacto:</label
+              >
+              <input
+                type="text"
+                id="propietario"
+                name="propietario"
+                class="form-control"
+                placeholder="Nombre Dueño de la Mascota"
+              />
+            </div>
+            <div class="form-group row">
+              <label
+                class="pl-0 col-sm-4 col-lg-4 col-form-label text-secondary f-w-bold"
+                >Teléfono:</label
+              >
+              <input
+                type="tel"
+                id="telefono"
+                name="telefono"
+                class="form-control"
+                placeholder="Número de Teléfono"
+              />
+            </div>
+            <div class="form-group row">
+              <label
+                class="pl-0 col-sm-4 col-lg-4 col-form-label text-secondary f-w-bold"
+                >Fecha:</label
+              >
+              <input type="date" id="fecha" name="fecha" class="form-control" />
+            </div>
+
+            <div class="form-group row">
+              <label
+                class="pl-0 col-sm-4 col-lg-4 col-form-label text-secondary f-w-bold"
+                >Hora:</label
+              >
+              <div class="col-sm-8 col-lg-8 p-0">
+                <input type="time" id="hora" name="hora" class="form-control" />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label
+                class="pl-0 col-sm-4 col-lg-4 col-form-label text-secondary f-w-bold"
+                >Programa o Agenda:</label
+              >
+              <textarea
+                id="sintomas"
+                name="sintomas"
+                class="form-control"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <button
+                type="submit"
+                class="btn b-morado p-3 text-white w-50 d-block"
+              >
+                Crear evento
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <h2 id="administra" class="mb-4 text-center f-w-bold text-secondary">
+            Administra tus Eventos
+          </h2>
+          <ul id="eventos" class="list-group lista-eventos"></ul>
+        </div>
+      </div>
+      <!--.row-->
+    </div>
+    <!--.container-->
+
+    <footer class="footer mt-5">
+      <p class="footer-text text-center f-w-bold p-3 text-secondary">
+        © Todos los derechos reservados. Hecho por Jorge Luis Monzón Morales
+      </p>
+    </footer>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
