@@ -4,9 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Administrador de Pacientes</title>
+    <title>Administrador de Eventos</title>
     <link rel="stylesheet" href="css/bootstrap.css" />
     <link rel="stylesheet" href="css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <header class="header">
@@ -16,7 +22,7 @@
     <div class="container mt-5 p-5">
       <div id="contenido" class="row">
         <div class="col-md-6 agregar-evento">
-          <form id="nueva-evento">
+          <form id="nuevo-evento">
             <h2 class="mb-4 text-center text-secondary f-w-bold">
               Datos del Evento
             </h2>
@@ -27,10 +33,10 @@
               >
               <input
                 type="text"
-                id="mascota"
-                name="mascota"
+                id="evento"
+                name="evento"
                 class="form-control"
-                placeholder="Nombre Mascota"
+                placeholder="Nombre Evento"
               />
             </div>
             <div class="form-group row">
@@ -40,10 +46,10 @@
               >
               <input
                 type="text"
-                id="propietario"
-                name="propietario"
+                id="contacto"
+                name="contacto"
                 class="form-control"
-                placeholder="Nombre Dueño de la Mascota"
+                placeholder="Nombre del contacto del evento"
               />
             </div>
             <div class="form-group row">
@@ -83,8 +89,8 @@
                 >Programa o Agenda:</label
               >
               <textarea
-                id="sintomas"
-                name="sintomas"
+                id="agenda"
+                name="agenda"
                 class="form-control"
               ></textarea>
             </div>
