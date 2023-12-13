@@ -10,9 +10,47 @@ const agendaInput = document.querySelector('#agenda');
 const formulario = document.querySelector('#nuevo-evento');
 const contenedorEventos = document.querySelector('#eventos');
 
+// Clases
+class Eventos {
+  constructor() {
+    this.eventos = [];
+  }
+}
+
+class InterfazUsuario {
+  imprimirAlerta(mensaje, tipo) {
+    // Crear Div
+    const divMensaje = document.createElement('div');
+    divMensaje.classList.add('text-center', 'alert', 'd-block', 'col-12');
+
+    // Agregar clase en base al tipo de error
+    if (tipo === 'error') {
+      divMensaje.classList.add('alert-danger');
+    } else {
+      divMensaje.classList.add('alert-success');
+    }
+
+    // Mensaje de error
+    divMensaje.textContent = mensaje;
+
+    // Agregar al DOM, con insertBefore
+    document
+      .querySelector('#contenido')
+      .insertBefore(divMensaje, document.querySelector('.agregar-evento'));
+
+    // Quitar la alerta después de 5 segundos
+    setTimeout(() => {
+      divMensaje.remove();
+    }, 5000);
+  }
+}
+
+// Instancias de clases
+const interfazUsuario = new InterfazUsuario();
+const eventos = new Eventos();
+
 // Eventos
 eventListeners();
-
 function eventListeners() {
   // al rellenar lo datos en las referencia se ejecutara el llenado
   eventoInput.addEventListener('input', datosEvento);
@@ -21,6 +59,8 @@ function eventListeners() {
   fechaInput.addEventListener('input', datosEvento);
   horaInput.addEventListener('input', datosEvento);
   agendaInput.addEventListener('input', datosEvento);
+
+  formulario.addEventListener('submit', nuevoEvento);
 }
 
 // Objeto de la información del evento
@@ -39,4 +79,28 @@ function datosEvento(e) {
   eventoObj[e.target.name] = e.target.value;
 
   console.log(eventoObj);
+}
+
+// Valida y agrega un nuevo evento a la clase de eventos
+function nuevoEvento(e) {
+  e.preventDefault();
+
+  // Aplicar destructuración, extraemos la información del obejto de cita
+  const { evento, contacto, telefono, fecha, hora, agenda } = eventoObj;
+
+  // Validar
+  if (
+    evento === '' ||
+    contacto === '' ||
+    telefono === '' ||
+    fecha === '' ||
+    hora === '' ||
+    agenda === ''
+  ) {
+    interfazUsuario.imprimirAlerta(
+      `Todos los campos son obligatorios`,
+      'error'
+    );
+    return;
+  }
 }
