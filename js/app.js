@@ -92,10 +92,12 @@ class InterfazUsuario {
       const agendaParrafo = document.createElement('p');
       agendaParrafo.innerHTML = `<span class="font-weight-bolder">Agenda: </span> ${agenda}`;
 
+      // boton para eliminar este evetno
       const btnEliminiar = document.createElement('button');
-      btnEliminiar.classList.add('btn-danger', 'p-2');
-      btnEliminiar.textContent = 'Eliminar';
-      btnEliminiar.value = id;
+      btnEliminiar.classList.add('btn', 'btn-danger', 'p-2');
+      btnEliminiar.innerHTML = `Eliminar <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>`;
 
       btnEliminiar.addEventListener('click', () => {
         eliminarEventosHTML(id);
@@ -156,7 +158,30 @@ const eventoObj = {
 // Agregar datos  al objeto de evento
 function datosEvento(e) {
   // llenar los datos al objeto de evento, con los valores del input
-  eventoObj[e.target.name] = e.target.value;
+  const cadena = e.target.value;
+
+  if (e.target.name === 'evento' || e.target.name === 'contacto') {
+    // llenar los datos al objeto de evento, con los valores del input
+    eventoObj[e.target.name] = capitalizarPrimeraLetra(cadena);
+
+    // validación de longitud de telefono
+  } else if (e.target.name === 'telefono' && e.target.value.length > 9) {
+
+    interfazUsuario.imprimirAlerta(
+      'Numero telefono tiene que ser menor igual a 9 digitos',
+      'error'
+    );
+    return;
+  } else {
+    // guarda los valores en minuscula
+    eventoObj[e.target.name] = cadena.toLowerCase();
+  }
+}
+
+// función para capitalizar primer letra de una cadena
+function capitalizarPrimeraLetra(cadena) {
+  // devuelve el pimer caracter en mayuscula y lo demas partidiendo del segundo caracter
+  return cadena.charAt(0).toUpperCase() + cadena.slice(1).toLowerCase();
 }
 
 // Valida y agrega un nuevo evento a la clase de eventos
@@ -209,8 +234,12 @@ function reiniciarObjeto() {
 }
 
 function eliminarEventosHTML(id) {
-  // paso el id de referencia a eliminar y devuelvo el nuevo arreglo sin el id a eliminar
+  // ELiminar el evento del arreglo de eventos del objeto
   adinistrarEventos.eliminarEvento(id);
+
+  // Muestra un mensaje
+  interfazUsuario.imprimirAlerta(`El Evento se Elimino, Correctamente`);
+
   // imprimimos los eventos nuevamente, sin el id eliminado de acuero al array del objeto
   interfazUsuario.imprimirEvento(adinistrarEventos);
 }
