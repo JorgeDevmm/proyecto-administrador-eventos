@@ -12,8 +12,17 @@ const contenedorEventos = document.querySelector('#eventos');
 
 // Clases
 class Eventos {
+  // contructor donde inicializo un arreglo vacio de eventos
   constructor() {
     this.eventos = [];
+  }
+
+  // Función para agregar un nuevo evento al arreglo de eventos
+  agregarEvento(objEvento) {
+    // asignamos al arreglo un objeto = evento
+    this.eventos = [...this.eventos, objEvento];
+
+    console.log(this.eventos);
   }
 }
 
@@ -47,7 +56,7 @@ class InterfazUsuario {
 
 // Instancias de clases
 const interfazUsuario = new InterfazUsuario();
-const eventos = new Eventos();
+const adinistrarEventos = new Eventos();
 
 // Eventos
 eventListeners();
@@ -75,10 +84,8 @@ const eventoObj = {
 
 // Agregar datos  al objeto de evento
 function datosEvento(e) {
-  // llenar los datos al objeto de evento
+  // llenar los datos al objeto de evento, con los valores del input
   eventoObj[e.target.name] = e.target.value;
-
-  console.log(eventoObj);
 }
 
 // Valida y agrega un nuevo evento a la clase de eventos
@@ -103,4 +110,26 @@ function nuevoEvento(e) {
     );
     return;
   }
+
+  // Generar un id unico, en una nueva propiedad al objeto
+  eventoObj.id = Date.now();
+
+  // Creando un nuevo evento, con una copia del objeto agregado no la referencia principal
+  adinistrarEventos.agregarEvento({ ...eventoObj });
+
+  // Reiniciar el objeto para la validación
+  reinicarObjeto();
+
+  // Reiniciar el formulario
+  formulario.reset();
+}
+
+function reinicarObjeto() {
+  // borramos los valores del objeto prinicipal
+  eventoObj.evento = '';
+  eventoObj.contacto = '';
+  eventoObj.telefono = '';
+  eventoObj.fecha = '';
+  eventoObj.hora = '';
+  eventoObj.agenda = '';
 }
