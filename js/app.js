@@ -10,6 +10,8 @@ const agendaInput = document.querySelector('#agenda');
 const formulario = document.querySelector('#nuevo-evento');
 const contenedorEventos = document.querySelector('#eventos');
 
+let editando;
+
 // Clases
 class Eventos {
   // contructor donde inicializo un arreglo vacio de eventos
@@ -92,15 +94,27 @@ class InterfazUsuario {
       const agendaParrafo = document.createElement('p');
       agendaParrafo.innerHTML = `<span class="font-weight-bolder">Agenda: </span> ${agenda}`;
 
-      // boton para eliminar este evetno
+      // boton para eliminar evento
       const btnEliminiar = document.createElement('button');
-      btnEliminiar.classList.add('btn', 'btn-danger', 'p-2');
+      btnEliminiar.classList.add('btn', 'btn-danger', 'p-2', 'mr-2');
       btnEliminiar.innerHTML = `Eliminar <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
       <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>`;
 
       btnEliminiar.addEventListener('click', () => {
         eliminarEventosHTML(id);
+      });
+
+      // boton para editar evento
+      const btnEditar = document.createElement('button');
+      btnEditar.classList.add('btn', 'btn-info', 'p-2');
+      btnEditar.innerHTML = `Editar <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+      </svg>`;
+
+      // pasamos el objeto por parametro para poder cargar mas adelante los datos
+      btnEditar.addEventListener('click', () => {
+        editarEventoHTML(eventoObj);
       });
 
       // Agregar los parrafos al divEvento
@@ -111,6 +125,7 @@ class InterfazUsuario {
       divEvento.appendChild(horaParrafo);
       divEvento.appendChild(agendaParrafo);
       divEvento.appendChild(btnEliminiar);
+      divEvento.appendChild(btnEditar);
 
       // Agregar los eventos al html
       contenedorEventos.appendChild(divEvento);
@@ -165,13 +180,20 @@ function datosEvento(e) {
     eventoObj[e.target.name] = capitalizarPrimeraLetra(cadena);
 
     // validación de longitud de telefono
-  } else if (e.target.name === 'telefono' && e.target.value.length > 9) {
-
-    interfazUsuario.imprimirAlerta(
-      'Numero telefono tiene que ser menor igual a 9 digitos',
-      'error'
-    );
-    return;
+  } else if (e.target.name === 'telefono') {
+    // validación de longitud de telefono
+    if (e.target.value.length > 9) {
+      interfazUsuario.imprimirAlerta(
+        'Numero telefono tiene que ser menor igual a 9 digitos',
+        'error'
+      );
+      // limpia campo para que solicite ingresar correctamente
+      e.target.value = '';
+      return;
+    } else {
+      // guarda los valores en minuscula
+      eventoObj[e.target.name] = cadena.toLowerCase();
+    }
   } else {
     // guarda los valores en minuscula
     eventoObj[e.target.name] = cadena.toLowerCase();
@@ -191,6 +213,8 @@ function nuevoEvento(e) {
   // Aplicar destructuración, extraemos la información del objeto de evento
   const { evento, contacto, telefono, fecha, hora, agenda } = eventoObj;
 
+  console.log(eventoObj);
+
   // Validar
   if (
     evento === '' ||
@@ -207,11 +231,32 @@ function nuevoEvento(e) {
     return;
   }
 
-  // Generar un id unico, en una nueva propiedad al objeto
-  eventoObj.id = Date.now();
+  if (editando) {
+    // Mensaje de agregado correctamente
+    interfazUsuario.imprimirAlerta(`Editando correctamente`);
 
-  // Creando un nuevo evento, con una copia del objeto agregado no la referencia principal
-  adinistrarEventos.agregarEvento({ ...eventoObj });
+    // Pasar el objeto del evento a edición
+
+
+    // cambiar el texto del botón
+    formulario.querySelector('button[type="submit"]').textContent =
+      'Crear Evento';
+
+    // quitar modo edición
+    editando = true;
+  } else {
+
+    // Generar un id unico, en una nueva propiedad al objeto
+    eventoObj.id = Date.now();
+
+    // Creando un nuevo evento, con una copia del objeto agregado no la referencia principal
+    adinistrarEventos.agregarEvento({ ...eventoObj });
+
+    // Mensaje de agregado correctamente
+    interfazUsuario.imprimirAlerta(`Se agregó correctamente`);
+  }
+
+
 
   // Reiniciar el objeto para la validación
   reiniciarObjeto();
@@ -242,4 +287,36 @@ function eliminarEventosHTML(id) {
 
   // imprimimos los eventos nuevamente, sin el id eliminado de acuero al array del objeto
   interfazUsuario.imprimirEvento(adinistrarEventos);
+}
+
+// Carga los datos y el modo edición
+function editarEventoHTML(eventoActual) {
+  const { evento, contacto, telefono, fecha, hora, agenda, id } = eventoActual;
+
+  // Llenar los imputs
+  eventoInput.value = evento;
+  contactoInput.value = contacto;
+  telefonoInput.value = telefono;
+  fechaInput.value = fecha;
+  horaInput.value = hora;
+  agendaInput.value = agenda;
+
+  // Lllenar el objeto global, con los valores del evento actual
+  eventoObj.evento = evento;
+  eventoObj.contacto = contacto;
+  eventoObj.telefono = telefono;
+  eventoObj.fecha = fecha;
+  eventoObj.hora = hora;
+  eventoObj.agenda = agenda;
+  eventoObj.id = id;
+
+  console.log(eventoObj);
+
+  // cambiar el texto del botón
+  formulario.querySelector('button[type="submit"]').textContent =
+    'Guardar Cambios';
+
+  editando = true;
+
+  console.log(editando);
 }
