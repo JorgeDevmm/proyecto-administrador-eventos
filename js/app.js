@@ -23,13 +23,18 @@ class Eventos {
   agregarEvento(objEvento) {
     // asignamos al arreglo un objeto = evento
     this.eventos = [...this.eventos, objEvento];
-
-    console.log(this.eventos);
   }
 
   // guardo en un nuevo array sin el id a eliminar
   eliminarEvento(id) {
     this.eventos = this.eventos.filter((evento) => evento.id != id);
+  }
+
+  editarEvento(objEventoActualizodo) {
+    // si coincide en id pasa el obj actualizado al objeto actual, sino mantiene el actual
+    this.eventos = this.eventos.map((evento) =>
+      evento.id === objEventoActualizodo.id ? objEventoActualizodo : evento
+    );
   }
 }
 
@@ -49,6 +54,9 @@ class InterfazUsuario {
 
     // Mensaje de error
     divMensaje.textContent = mensaje;
+
+    // limpia la alerta de duplicidad
+    this.limpiarAlertas('#contenido', '.alert');
 
     // Agregar al DOM, con insertBefore
     document
@@ -140,6 +148,18 @@ class InterfazUsuario {
       referencia.removeChild(referencia.firstChild);
     }
   }
+
+  // limpiar la duplicidad alertas, mediante el contenedor y la clase que usaremos como referencia para eliminar
+  limpiarAlertas(referenciaContenedor, claseReferencia) {
+    //Validación si ya hay una alerta presente, mediante la referencia de la clase alert
+    const alertaExistente = document.querySelector(
+      `${referenciaContenedor} ${claseReferencia}`
+    );
+    if (alertaExistente) {
+      // Si ya hay una alerta, no agregamos otra
+      alertaExistente.remove();
+    }
+  }
 }
 
 // Instancias de clases
@@ -213,8 +233,6 @@ function nuevoEvento(e) {
   // Aplicar destructuración, extraemos la información del objeto de evento
   const { evento, contacto, telefono, fecha, hora, agenda } = eventoObj;
 
-  console.log(eventoObj);
-
   // Validar
   if (
     evento === '' ||
@@ -231,21 +249,21 @@ function nuevoEvento(e) {
     return;
   }
 
+  // utilizamos variable global para comprobar
   if (editando) {
     // Mensaje de agregado correctamente
     interfazUsuario.imprimirAlerta(`Editando correctamente`);
 
-    // Pasar el objeto del evento a edición
+    // Pasar el objeto del evento a edición con un copia del objeto global
+    adinistrarEventos.editarEvento({ ...eventoObj });
 
-
-    // cambiar el texto del botón
+    //regresar el texto del boton a su estado original
     formulario.querySelector('button[type="submit"]').textContent =
       'Crear Evento';
 
     // quitar modo edición
-    editando = true;
+    editando = false;
   } else {
-
     // Generar un id unico, en una nueva propiedad al objeto
     eventoObj.id = Date.now();
 
@@ -255,8 +273,6 @@ function nuevoEvento(e) {
     // Mensaje de agregado correctamente
     interfazUsuario.imprimirAlerta(`Se agregó correctamente`);
   }
-
-
 
   // Reiniciar el objeto para la validación
   reiniciarObjeto();
@@ -301,7 +317,7 @@ function editarEventoHTML(eventoActual) {
   horaInput.value = hora;
   agendaInput.value = agenda;
 
-  // Lllenar el objeto global, con los valores del evento actual
+  // Cargar los valores al objeto global, con los valores del evento actual
   eventoObj.evento = evento;
   eventoObj.contacto = contacto;
   eventoObj.telefono = telefono;
@@ -310,13 +326,10 @@ function editarEventoHTML(eventoActual) {
   eventoObj.agenda = agenda;
   eventoObj.id = id;
 
-  console.log(eventoObj);
-
-  // cambiar el texto del botón
+  // cambiar el texto del botón al editar
   formulario.querySelector('button[type="submit"]').textContent =
     'Guardar Cambios';
 
+  // variable utilizada para validar edición
   editando = true;
-
-  console.log(editando);
 }
