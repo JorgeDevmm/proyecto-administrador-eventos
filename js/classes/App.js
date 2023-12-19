@@ -7,12 +7,18 @@ import {
   agendaInput,
   formulario,
 } from '../selectores.js';
-import { datosEvento, nuevoEvento } from '../funciones.js';
+import { datosEvento, nuevoEvento, crearDB } from '../funciones.js';
 
 class App {
   constructor() {
-    // llamamos al metodo initApp al ejectuar constructor
-    this.initApp();
+    // similar al un DomContent
+    window.onload = () => {
+      // creamos nuestra base de datos en indexesDB
+      crearDB();
+
+      // llamamos al metodo initApp al ejectuar constructor
+      this.initApp();
+    };
   }
 
   initApp() {

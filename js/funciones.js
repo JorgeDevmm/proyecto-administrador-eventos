@@ -7,7 +7,7 @@ import {
   fechaInput,
   horaInput,
   agendaInput,
-  formulario
+  formulario,
 } from './selectores.js';
 
 // Instancias de clases
@@ -16,6 +16,9 @@ const administrarEventos = new Eventos();
 
 // variable para validación en la edición del formulario
 let editando;
+
+// Variable para manipular base de datos
+let DB;
 
 // Objeto de la información del evento
 const eventoObj = {
@@ -169,4 +172,47 @@ export function editarEventoHTML(eventoActual) {
 
   // variable utilizada para validar edición
   editando = true;
+}
+
+export function crearDB() {
+  // Crear la base de datos en versión 1.0
+  const crearDB = window.indexedDB.open('evento', 1);
+
+  // si hay un error
+  crearDB.onerror = function () {
+    console.log(`Hubo un error en la creación`);
+  };
+
+  // si todo sale bien
+  crearDB.onsuccess = function () {
+    console.log(`se creo base de datos correctamente`);
+
+    // Instancia de la creación de la base
+    DB = crearDB.result;
+
+    console.log(DB);
+  };
+
+  // Definir el schema
+  crearDB.onupgradeneeded = function (e) {
+    // referenciamos nuestro evento que devuelve la creación de db
+    const db = e.target.result;
+
+    // creamos nuestro objeto de almacenamiento,definimos nuestro indice, y autoincrementable
+    const objectStore = db.createObjectStore('evento', {
+      keyPath: 'id',
+      autoIncrement: true,
+    });
+
+    // Definimos columnas, nombre columna/keyPath/objeot opciones
+    objectStore.createIndex('evento', 'evento', { unique: false });
+    objectStore.createIndex('contacto', 'contacto', { unique: false });
+    objectStore.createIndex('telefono', 'telefono', { unique: false });
+    objectStore.createIndex('fecha', 'fecha', { unique: false });
+    objectStore.createIndex('hora', 'hora', { unique: false });
+    objectStore.createIndex('agenda', 'agenda', { unique: false });
+    objectStore.createIndex('id', 'id', { unique: true });
+
+    console.log('DB Creada y Lista');
+  };
 }
