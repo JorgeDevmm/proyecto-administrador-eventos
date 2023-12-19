@@ -110,8 +110,23 @@ export function nuevoEvento(e) {
     // Creando un nuevo evento, con una copia del objeto agregado no la referencia principal
     administrarEventos.agregarEvento({ ...eventoObj });
 
-    // Mensaje de agregado correctamente
-    interfazUsuario.imprimirAlerta(`Se agregó correctamente`);
+    // TODO Inserta Registro en IndexDB
+
+    // creamos la transaction, pasando nuestro almacenamiento de objeto en array y el modo
+    const transaction = DB.transaction(['evento'], 'readwrite');
+
+    // creamos y habilitamso, nuestro objectStore
+    const objectStore = transaction.objectStore('evento');
+
+    // insertamos nuestro objeto de los datos del formualrio. al nuestro objectStore
+    objectStore.add(eventoObj);
+
+    // validar si se agrego la transacción
+    transaction.oncomplete = function () {
+      console.log('Cita Agregada');
+      // Mensaje de agregado correctamente
+      interfazUsuario.imprimirAlerta(`Se agregó correctamente`);
+    };
   }
 
   // Reiniciar el objeto para la validación
